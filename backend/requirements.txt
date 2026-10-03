@@ -1,0 +1,5 @@
+flask==3.1.2
+flask-cors==6.0.1
+requests==2.32.5
+# gunicorn 只在 Linux 云主机安装：pip install gunicorn
+# Windows 本地不要装，用 python app.py 即可

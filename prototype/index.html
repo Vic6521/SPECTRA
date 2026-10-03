@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPECTRA · 顶会热词观测台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg">
+    <div class="orb a"></div>
+    <div class="orb b"></div>
+    <div class="orb c"></div>
+  </div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">CVPR · ICCV · ECCV</div>
+        <h1>SPECTRA</h1>
+        <p>把三大会的热点，摊成可见的光谱。</p>
+      </div>
+      <nav>
+        <button data-route="overview" class="active">总览</button>
+        <button data-route="trend">热度走势</button>
+        <button data-route="evo">年度演变</button>
+        <button data-route="papers">论文库</button>
+        <button data-route="crawl">采集中心</button>
+        <button data-route="about">了解更多</button>
+      </nav>
+      <div class="side-foot">阶段一对照原型 · 正式评分请发布 Figma 分享链接 · 数据为示意样本</div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="search">
+          <span>⌕</span>
+          <input id="global-search" placeholder="搜索论文标题 / 关键词 / 编号，回车进入论文库" />
+        </div>
+        <div class="chips">
+          <button class="chip on" data-venue="CVPR">CVPR</button>
+          <button class="chip on" data-venue="ICCV">ICCV</button>
+          <button class="chip on" data-venue="ECCV">ECCV</button>
+        </div>
+      </div>
+      <div class="content">
+        <section class="view show" id="view-overview">
+          <div class="hero">
+            <div>
+              <h2>观测台总览</h2>
+              <p>Top 10 热门方向与关键词图谱同一屏。点击条形或节点，查看相关论文。</p>
+            </div>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><span>入库论文</span><strong id="kpi-papers">0</strong></div>
+            <div class="kpi"><span>关键词</span><strong id="kpi-keys">0</strong></div>
+            <div class="kpi"><span>年份窗口</span><strong id="kpi-years">—</strong></div>
+            <div class="kpi"><span>三大会分布</span><strong id="kpi-share" style="font-size:16px;line-height:1.4">—</strong></div>
+          </div>
+          <div class="split">
+            <div class="panel">
+              <h3>Top 10 热门方向</h3>
+              <div class="rank" id="rank"></div>
+            </div>
+            <div class="panel">
+              <h3>关键词图谱 · 点击节点看论文</h3>
+              <div class="graph-wrap"><canvas id="graph"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-trend">
+          <div class="hero">
+            <div>
+              <h2>热度走势对比</h2>
+              <p>拖动或播放，条子在 2022–2026 之间连续生长，名次滑动换位。一条里是 CVPR / ICCV / ECCV。</p>
+            </div>
+            <button class="btn primary" id="btn-play">播放</button>
+          </div>
+          <div class="panel race-panel">
+            <div class="year-reel" aria-hidden="true">
+              <div class="year-reel-inner" id="year-reel-inner">
+                <span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span>
+              </div>
+            </div>
+            <div class="scrub">
+              <input id="year-scrub" type="range" min="0" max="4" step="0.01" value="0" />
+              <div class="year-dots" id="year-dots"></div>
+            </div>
+            <div class="legend-row">
+              <span class="badge CVPR">CVPR</span>
+              <span class="badge ICCV">ICCV</span>
+              <span class="badge ECCV">ECCV</span>
+              <small class="muted">拖动时间轴 = 在相邻两年之间插值</small>
+            </div>
+            <div id="race-bars" class="race-list"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-evo">
+          <div class="hero">
+            <div>
+              <h2>年度热词演变</h2>
+              <p>点 2022–2026，同一行滑到新名次，不是整表闪一下。New / ↑ / ↓ 相对上年。</p>
+            </div>
+          </div>
+          <div class="year-pills" id="evo-pills"></div>
+          <div class="panel">
+            <div id="evo-list" class="evo-list"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-papers">
+          <div class="hero">
+            <div>
+              <h2>论文库</h2>
+              <p>增、删、改、精确/模糊查询。本地没有时，引导联网采集。</p>
+            </div>
+            <button class="btn primary" id="btn-add">新增论文</button>
+          </div>
+          <div class="toolbar">
+            <div class="search" style="max-width:420px">
+              <input id="paper-search" placeholder="标题精确 / 关键词、编号模糊" />
+            </div>
+          </div>
+          <div class="banner" id="empty-banner">
+            <div>论文库中没有「<strong id="empty-query"></strong>」。是否按该语句到公开源采集？</div>
+            <button class="btn primary" id="btn-empty-crawl">去采集</button>
+          </div>
+          <div class="panel">
+            <table>
+              <thead>
+                <tr><th>标题</th><th>会议</th><th>年份</th><th>关键词</th><th>操作</th></tr>
+              </thead>
+              <tbody id="paper-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="view" id="view-crawl">
+          <div class="hero">
+            <div>
+              <h2>采集中心</h2>
+              <p>支持单个标题与批量导入，补全摘要、关键词、原文链接。</p>
+            </div>
+          </div>
+          <div class="tabs">
+            <button class="btn primary" id="tab-single">单篇采集</button>
+            <button class="btn" id="tab-batch">批量导入</button>
+          </div>
+          <div class="panel" id="pane-single">
+            <div class="field">
+              <label for="crawl-title">论文标题</label>
+              <input id="crawl-title" placeholder="例如：Segment Anything" />
+            </div>
+            <button class="btn primary" id="btn-crawl">开始采集</button>
+            <button class="btn" id="btn-commit">写入论文库</button>
+            <div id="crawl-preview" style="margin-top:16px"></div>
+          </div>
+          <div class="panel" id="pane-batch" style="display:none">
+            <div class="field">
+              <label for="batch-text">每行一个标题</label>
+              <textarea id="batch-text" rows="8" placeholder="Title A&#10;Title B"></textarea>
+            </div>
+            <div class="progress"><i id="batch-bar"></i></div>
+            <button class="btn primary" id="btn-batch">批量采集并写入</button>
+          </div>
+        </section>
+
+        <section class="view" id="view-about">
+          <div class="hero">
+            <div>
+              <h2>了解更多</h2>
+              <p>三大会背景与统计口径。热词不是真理，是可复现的压缩。</p>
+            </div>
+          </div>
+          <div class="about-grid">
+            <div class="panel about-card">
+              <h3 style="color:var(--cvpr)">CVPR</h3>
+              <p>IEEE/CVF 计算机视觉与模式识别会议，每年举办，体量最大。作业引用 2025 投稿 13008、录取 2878。</p>
+            </div>
+            <div class="panel about-card">
+              <h3 style="color:var(--iccv)">ICCV</h3>
+              <p>国际计算机视觉大会，通常与 ECCV 交替的奇数年。偏重视觉基础问题与新范式。</p>
+            </div>
+            <div class="panel about-card">
+              <h3 style="color:var(--eccv)">ECCV</h3>
+              <p>欧洲计算机视觉国际会议，偶数年。与 CVPR/ICCV 共同构成 CV 三大会。</p>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <h3>热度口径</h3>
+            <p>语料来自标题、作者关键词与摘要（摘要降权）。停用词过滤后：</p>
+            <div class="formula">heat(k, y) = freq(k, y) × (1 + 0.5 × growth(k, y))</div>
+            <p>growth 为近两年（2025–2026）相对此前年份的增长率，截断到 [-1, 3]。数据窗口 2022–2026。数据源：DBLP 公开 API / 会议公开列表 / 课程数据集。爬取仅用于教学。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer">
+    <button class="btn" data-close>关闭</button>
+    <h3 id="drawer-title"></h3>
+    <div id="drawer-body"></div>
+  </aside>
+
+  <div class="modal-mask" id="modal-edit">
+    <div class="modal">
+      <h3 id="modal-title">编辑论文</h3>
+      <div class="field"><label>标题</label><input id="f-title" /></div>
+      <div class="field"><label>会议</label>
+        <select id="f-venue"><option>CVPR</option><option>ICCV</option><option>ECCV</option></select>
+      </div>
+      <div class="field"><label>年份</label><input id="f-year" type="number" min="2022" max="2026" /></div>
+      <div class="field"><label>关键词（逗号分隔）</label><input id="f-keys" /></div>
+      <div class="field"><label>摘要</label><textarea id="f-abs" rows="4"></textarea></div>
+      <div class="field"><label>原文链接</label><input id="f-link" /></div>
+      <button class="btn primary" id="btn-save">保存</button>
+      <button class="btn" data-close>取消</button>
+    </div>
+  </div>
+  <div class="modal-mask" id="modal-del">
+    <div class="modal">
+      <h3>确认删除这篇论文？</h3>
+      <p class="muted">删除后总览图谱会在下次进入时重算。</p>
+      <button class="btn danger" id="btn-del">删除</button>
+      <button class="btn" data-close>取消</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

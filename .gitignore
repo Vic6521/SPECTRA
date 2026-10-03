@@ -1,0 +1,57 @@
+# 依赖与环境
+node_modules/
+venv/
+.venv/
+.env
+.env.*
+*.pyc
+__pycache__/
+.Python
+
+# 构建产物
+dist/
+build/
+.cache/
+.parcel-cache/
+.vite/
+coverage/
+
+# IDE
+.idea/
+.vscode/
+# Cursor 长期记忆（用户与对话，仅本地）
+.cursor/memory/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 日志与临时文件
+*.log
+*.tmp
+tmp/
+temp/
+
+# 编译产物（作业要求忽略）
+*.class
+*.jar
+*.exe
+*.dll
+*.so
+*.o
+
+# 数据缓存（保留样例数据，忽略爬取缓存）
+data/cache/
+data/raw/*.zip
+*.sqlite-journal
+data/*.db
+backend/data/*.db
+
+# 博客文稿只在本地写，不进代码仓
+blog/
+
+# 发行包由 git archive / 网页 Tags 导出，不入库
+release/
+
+# 系统
+desktop.ini
