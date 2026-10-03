@@ -17,7 +17,7 @@ python start.py
 ### 交给 AI 一键部署（复制整段）
 
 ```text
-把 https://github.com/Vic6521/SPECTRA.git 克隆到我的本机并按仓库 README「快速开始」和 AGENTS.md 启动。需要 Python 3.10+ 和 Node 18+。在仓库根目录执行 python start.py，打开 http://localhost:5173/。只部署到本机，不要上云，不要改任何已有公网地址。论文库保存在我自己的浏览器里。
+把 https://github.com/Vic6521/SPECTRA.git 克隆到我的本机并按仓库 README「快速开始」和 AGENTS.md 启动。需要 Python 3.10+ 和 Node 18+。在仓库根目录执行 python start.py，打开 http://localhost:5173/。只部署到本机，不要上云。论文库保存在我自己的浏览器里。
 ```
 
 发给朋友时，把上面「快速开始」三行，或「交给 AI」那一段贴出去即可。
@@ -27,15 +27,6 @@ python start.py
 - 第一次打开会写入约 47 篇示意论文（真实顶会公开论文，含 CVF / ECVA / arXiv 链接），不是三大会全量。
 - 之后你收藏、添加、采集的内容只留在这台电脑的这只浏览器。
 - 换电脑或清掉浏览器数据会变成一份新库；需要重新开始时，论文库页可以「重置本机库」。
-
-## 作业信息
-
-课程作业仍按当时提交的入口评阅，**不要用本仓去替换已交的云主机网址**。
-
-- 作业要求：[软件工程实践第二次作业——与AI结对编程（顶会热词统计）](https://bbs.csdn.net/topics/620526370)
-- 班级社区：[202601福大-软件工程实践-W班](https://bbs.csdn.net/forums/FZU_university_2026)
-- 学号：152401221
-- CodeArts 作业仓：[152401221-spectra](https://codehub.devcloud.cn-north-4.huaweicloud.com/08ad145e89cd43d89513e75bf09dd94e/152401221-spectra.git)
 
 ## 项目介绍
 
@@ -80,7 +71,7 @@ start.py              本机一键启动
 AGENTS.md             给 AI Agent 的部署说明
 frontend/             Vue 3 + Vite
 backend/              Flask
-deploy/               云主机脚本（作业用，公众使用请走 start.py）
+deploy/               云主机脚本（公众使用请走 start.py）
 prototype/            本地对照稿
 data/                 本地生成，不入库
 ```
